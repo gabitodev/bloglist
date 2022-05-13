@@ -1,0 +1,29 @@
+{
+  "name": "bloglist",
+  "version": "1.0.0",
+  "description": "Full Stack 2022 Part 4 Exercises",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gabitodev/bloglist.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gabitodev/bloglist/issues"
+  },
+  "homepage": "https://github.com/gabitodev/bloglist#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "mongoose": "^6.3.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.16"
+  }
+}
