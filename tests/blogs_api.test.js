@@ -47,7 +47,7 @@ describe('when there is initially some blogs', () => {
 });
 
 describe('addition of a new blog', () => {
-  test('sucess with a valid blog', async () => {
+  test('succeeds with valid data', async () => {
     const newBlog = {
       _id: '5a422b3a1b54a676234d17f9',
       title: 'Canonical string reduction',
@@ -88,7 +88,7 @@ describe('addition of a new blog', () => {
     );
   }, 100000);
 
-  test('if the like property is missing will default to 0', async () => {
+  test('succeeds if the likes property is missing by making it default to 0', async () => {
     const newBlog = {
       _id: '5a422b3a1b54a676234d17f9',
       title: 'Canonical string reduction',
@@ -128,7 +128,7 @@ describe('addition of a new blog', () => {
     );
   }, 100000);
 
-  test('if the title and url properties are missing the server respond with status code 400', async () => {
+  test('fails with status code 400 if the title and url properties are missing', async () => {
     const newBlog = {
       _id: '5a422b3a1b54a676234d17f9',
       url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
@@ -164,7 +164,7 @@ describe('deletion of a blog', () => {
 });
 
 describe('updation of a blog', () => {
-  test('succeeds updating the likes parameter and the server responds with a 200 status code', async () => {
+  test('succeed with status code 200 updating only the parameter like ', async () => {
     const blogsAtStart = (await api.get('/api/blogs')).body;
     const blogToUpdate = blogsAtStart[0];
     blogToUpdate.likes = 500;
