@@ -9,10 +9,12 @@ blogsRouter.get('/', async (request, response) =>  {
 
 blogsRouter.post('/', async (request, response) => {
   const { author, title, userId, likes, url } = request.body;
+
   if (!(author && title)) {
     response.status(400).end();
   } else {
     const user = await User.findById(userId);
+
     const blog = new Blog({
       title,
       author,
@@ -20,9 +22,13 @@ blogsRouter.post('/', async (request, response) => {
       url,
       user: user._id
     });
+
     const savedBlog  = await blog.save();
+
     user.blogs = user.blogs.concat(savedBlog._id);
+
     await user.save();
+    
     response.status(201).json(savedBlog);
   }
 });
