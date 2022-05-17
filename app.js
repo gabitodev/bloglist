@@ -2,11 +2,11 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const logger = require('./utils/logger');
-const { MONGO_URI } = require('./utils/config');
+const { MONGODB_URI } = require('./utils/config');
 const blogRouter = require('./controllers/blog');
 const mongoose = require('mongoose');
 
-mongoose.connect(MONGO_URI)
+mongoose.connect(MONGODB_URI)
   .then(() => {
     logger.info('Connected to MongoDB');
   })
