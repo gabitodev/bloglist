@@ -1,4 +1,6 @@
-const { countBy, filter, reduce } = require('lodash');
+const { countBy } = require('lodash');
+const Blog = require('../models/blog');
+const User = require('../models/user');
 
 const dummy = (blogs) => {
   return 1;
@@ -44,4 +46,14 @@ const mostLikes = (blogs) => blogs.reduce(({ sums, most }, {likes, author}) => {
   return {sums,most};
 }, {sums: {}, most: {likes: 0}}).most;
 
-module.exports = { dummy, totalLikes, favoriteBlog, mostBlogs, mostLikes };
+const blogsInDB = async () => {
+  const blogs = await Blog.find({});
+  return blogs.map(b => b.toJSON());
+}
+
+const usersInDB = async () => {
+  const users = await User.find({});
+  return users.map(b => b.toJSON());
+}
+
+module.exports = { dummy, totalLikes, favoriteBlog, mostBlogs, mostLikes, usersInDB, blogsInDB };

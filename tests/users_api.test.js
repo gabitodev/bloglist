@@ -3,7 +3,8 @@ const supertest = require('supertest');
 const app = require('../app');
 const api = supertest(app);
 const User = require('../models/user');
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
+const { usersInDB } = require('../utils/list_helper');
 
 
 beforeEach(async () => {
@@ -16,7 +17,7 @@ beforeEach(async () => {
 
 describe('addition of a user', () => {
   test('susceeds with code 200 if data is valid', async () => {
-    const usersAtStart = (await api.get('/api/users')).body;
+    const usersAtStart = await usersInDB();
     
     const newUser = {
       username: 'alejandro78',
@@ -30,7 +31,7 @@ describe('addition of a user', () => {
       .expect(201)
       .expect('Content-Type', /application\/json/);
 
-    const usersAtEnd = (await api.get('/api/users')).body;
+    const usersAtEnd = await usersInDB();
 
     const usernames = usersAtEnd.map(user => user.username);
     expect(usernames).toContain(newUser.username);
@@ -38,7 +39,7 @@ describe('addition of a user', () => {
   }, 100000);
 
   test('fails with code 400 and message if username already is taken ', async () => {
-    const usersAtStart = (await api.get('/api/users')).body;
+    const usersAtStart = await usersInDB();
     
     const newUser = {
       username: 'test123',
@@ -54,12 +55,12 @@ describe('addition of a user', () => {
 
 
     expect(result.body.error).toContain('username must be unique');
-    const usersAtEnd = (await api.get('/api/users')).body;
+    const usersAtEnd = await usersInDB();
     expect(usersAtEnd).toEqual(usersAtStart);
   }, 100000);
 
   test('fails with code 400 and message if username and password is missing', async () => {
-    const usersAtStart = (await api.get('/api/users')).body;
+    const usersAtStart = await usersInDB();
     
     const newUser = {
       name: 'Alejandro Gonzales',
@@ -73,12 +74,12 @@ describe('addition of a user', () => {
       .expect('Content-Type', /application\/json/);
 
     expect(result.body.error).toContain('username and password is required');
-    const usersAtEnd = (await api.get('/api/users')).body;
+    const usersAtEnd = await usersInDB();
     expect(usersAtEnd).toEqual(usersAtStart);
   }, 100000);
 
   test('fails with code 400 and message if username and password is less than 3 characters', async () => {
-    const usersAtStart = (await api.get('/api/users')).body;
+    const usersAtStart = await usersInDB();
     
     const newUser = {
       username: 'p33434',
@@ -93,7 +94,7 @@ describe('addition of a user', () => {
       .expect('Content-Type', /application\/json/);
 
     expect(result.body.error).toContain('username and password must be 3 characters long');
-    const usersAtEnd = (await api.get('/api/users')).body;
+    const usersAtEnd = await usersInDB();
     expect(usersAtEnd).toEqual(usersAtStart);
   }, 100000);
 })
