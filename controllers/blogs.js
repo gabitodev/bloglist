@@ -21,7 +21,8 @@ blogsRouter.post('/', userExtractor, async (request, response) => {
     url,
     user: user._id
   });
-  const savedBlog  = await blog.save();
+  const savedBlog = await blog.save();
+  await savedBlog.populate('user', {username: 1, name: 1});
 
   user.blogs = user.blogs.concat(savedBlog._id);
 
@@ -33,6 +34,7 @@ blogsRouter.post('/', userExtractor, async (request, response) => {
 
 blogsRouter.delete('/:id', userExtractor, async (request, response) => {
   const user = request.user;
+  if (!user) return response.status(401).json({error: 'invalid user'});
   const blog = await Blog.findById(request.params.id);
   if (blog.user.toString() === user.id.toString()) {
     await Blog.findByIdAndDelete(request.params.id);
@@ -43,9 +45,9 @@ blogsRouter.delete('/:id', userExtractor, async (request, response) => {
 });
 
 blogsRouter.patch('/:id', userExtractor, async (request, response) => {
-  const blogToUpdate = request.body;
   const user = request.user;
-  const blogUpdated = await Blog.findByIdAndUpdate(request.params.id, {$set: {likes: blogToUpdate.likes}}, { new: true });
+  if (!user) return response.status(401).json({error: 'invalid user'});
+  const blogUpdated = await Blog.findByIdAndUpdate(request.params.id, {$inc: {likes: 1}}, { new: true }).populate('user', {username: 1, name: 1});
   response.status(200).json(blogUpdated);
 });
 
